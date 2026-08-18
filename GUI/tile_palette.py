@@ -38,7 +38,7 @@ class TilePalette:
       """
       Create and fill tile array
       """
-      tile_array = [[0 for _ in range(self.spritesheet_size_tiles[0])] for _ in range(self.spritesheet_size_tiles[1])]
+      tile_array = [[0 for _ in range(self.spritesheet_size_tiles[1])] for _ in range(self.spritesheet_size_tiles[0])]
       copy_rect = pygame.Rect(0, 0, self.tile_size_px[0], self.tile_size_px[1])
       colorkey = spritesheet.get_colorkey()
       for x in range(0, self.spritesheet_size_tiles[0]):
