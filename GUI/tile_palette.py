@@ -4,6 +4,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 import os
 import pygame
+from Engine import utility
 
 class TilePalette:
    """
@@ -13,8 +14,9 @@ class TilePalette:
    def __init__(self, spritesheet_file_name, spritesheet_size_tiles, tile_size_px):
       """
       spritesheet_file_name: string
-      spritesheet_size_tiles: tuple of ints
-      tile_size_px: tuple of ints
+      spritesheet_size_tiles (tuple of ints): number of tiles wide and tall
+      tile_size_px (tuple of ints): width and height of each tile in pixels
+      returns -> self
       """
       self.tile_size_px = tile_size_px
       self.spritesheet_size_tiles = spritesheet_size_tiles
@@ -24,6 +26,9 @@ class TilePalette:
    def _load_image_from_file(self, file_name, colorkey=None):
       """
       Load image from file. Use colorkey = -1 to set color in pixel 0, 0 as transparency color
+      filename (string): unqualified file name of spritesheet
+      colorkey (int tuple, -1, or None): color to be treated as fully transparent
+      returns -> Surface
       """
       main_dir = os.path.split(os.path.abspath(__file__))[0]
       image_dir = os.path.join(main_dir, "../res/images")
@@ -41,6 +46,8 @@ class TilePalette:
    def _get_tile_array(self, spritesheet):
       """
       Create and fill tile array
+      spritesheet (Surface): the spritesheet containing the tiles
+      returns -> Surface[][]
       """
       tile_array = utility.create_2d_array(self.spritesheet_size_tiles[0], self.spritesheet_size_tiles[1], 0)
       copy_rect = pygame.Rect(0, 0, self.tile_size_px[0], self.tile_size_px[1])
@@ -57,17 +64,22 @@ class TilePalette:
    def get_tile_background(self, bg_color):
       """
       Returns a rectangular tile a solid color, because blitting backgrounds is faster than drawing rects.
+      bg_color (tuple of ints): color
+      returns -> Surface
       """
       tile_bg = pygame.Surface((self.tile_size_px[0], self.tile_size_px[1]))
       tile_bg.fill(bg_color)
       return tile_bg
    
-   def get_tile(self, xIndex, yIndex, fg_color):
+   def get_tile(self, x_index, y_index, fg_color):
       """
-      
       Returns colored tile, with a transparent background
+      x_index (int): x location of tile on spritesheet
+      y_index (int): y location of tile on spritesheet
+      fg_color (tuple of ints): x location of tile on spritesheet
+      returns -> Surface
       """
-      base_image = self.tile_array[xIndex][yIndex]
+      base_image = self.tile_array[x_index][y_index]
       colored_image = pygame.Surface(base_image.get_size())
       colored_image.fill(fg_color)
       final_image = base_image.copy()
@@ -77,6 +89,8 @@ class TilePalette:
    def get_tile_by_index(self, index, fg_color):
       """
       Returns colored tile, with a transparent background
+      index (int or char): index of tile on spritesheet
+      returns -> Surface
       """
       if isinstance(index, str):
          index = ord(index)
