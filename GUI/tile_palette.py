@@ -23,6 +23,71 @@ class TilePalette:
       self.spritesheet = self._load_image_from_file(spritesheet_file_name, colorkey=-1)
       self.tile_array = self._get_tile_array(self.spritesheet)
    
+   def get_tile_background(self, bg_color):
+      """
+      Returns a rectangular tile a solid color, because blitting backgrounds is faster than drawing rects.
+      bg_color (tuple of ints): color
+      returns -> Surface
+      """
+      tile_bg = pygame.Surface((self.tile_size_px[0], self.tile_size_px[1]))
+      tile_bg.fill(bg_color)
+      return tile_bg
+   
+   def get_tile(self, x_index, y_index, fg_color):
+      """
+      Returns colored tile, with a transparent background
+      x_index (int): x location of tile on spritesheet
+      y_index (int): y location of tile on spritesheet
+      fg_color (tuple of ints): foreground color for new tile
+      returns -> Surface
+      """
+      base_image = self.tile_array[x_index][y_index]
+      colored_image = pygame.Surface(base_image.get_size())
+      colored_image.fill(fg_color)
+      final_image = base_image.copy()
+      final_image.blit(colored_image, (0, 0), special_flags = pygame.BLEND_MULT)
+      return final_image
+   
+   def get_tile_by_index(self, index, fg_color):
+      """
+      Returns colored tile, with a transparent background
+      index (int or char): index of tile on spritesheet
+      fg_color (tuple of ints): foreground color for new tile
+      returns -> Surface
+      """
+      if isinstance(index, str):
+         index = ord(index)
+      return self.get_tile(index % self.spritesheet_size_tiles[0], index // self.spritesheet_size_tiles[0], fg_color)
+   
+   def stack_tile(self, original_tile, x_index, y_index, fg_color):
+      """
+      Returns a new tile, stacked on top of the passed one
+      original_tile (Surface): image to be stacked on top of
+      x_index (int): x location of new tile on spritesheet
+      y_index (int): y location of new tile on spritesheet
+      fg_color (tuple of ints): foreground color for new tile
+      returns -> Surface
+      """
+      colorkey = self.spritesheet.get_colorkey()
+      new_image = pygame.Surface(base_image.get_size())
+      new_image.set_colorkey(colorkey, pygame.RLEACCEL)
+      new_image.fill(colorkey)
+      new_image.blit(original_tile, (0, 0))
+      new_image.blit(self.get_tile(x_index, y_index, fg_color), (0, 0))
+      return new_image
+   
+   def stack_tile_by_index(self, original_tile, index, fg_color):
+      """
+      Returns a new tile, stacked on top of the passed one
+      original_tile (Surface): image to be stacked on top of
+      index (int or char): index of tile on spritesheet
+      fg_color (tuple of ints): foreground color for new tile
+      returns -> Surface
+      """
+      if isinstance(index, str):
+         index = ord(index)
+      return self.stack_tile_by_index(original_tile, index % self.spritesheet_size_tiles[0], index // self.spritesheet_size_tiles[0], fg_color)
+   
    def _load_image_from_file(self, file_name, colorkey=None):
       """
       Load image from file. Use colorkey = -1 to set color in pixel 0, 0 as transparency color
@@ -60,41 +125,6 @@ class TilePalette:
             tile_array[x][y].blit(spritesheet, (0, 0), copy_rect)
             tile_array[x][y].set_colorkey(colorkey, pygame.RLEACCEL)
       return tile_array
-   
-   def get_tile_background(self, bg_color):
-      """
-      Returns a rectangular tile a solid color, because blitting backgrounds is faster than drawing rects.
-      bg_color (tuple of ints): color
-      returns -> Surface
-      """
-      tile_bg = pygame.Surface((self.tile_size_px[0], self.tile_size_px[1]))
-      tile_bg.fill(bg_color)
-      return tile_bg
-   
-   def get_tile(self, x_index, y_index, fg_color):
-      """
-      Returns colored tile, with a transparent background
-      x_index (int): x location of tile on spritesheet
-      y_index (int): y location of tile on spritesheet
-      fg_color (tuple of ints): x location of tile on spritesheet
-      returns -> Surface
-      """
-      base_image = self.tile_array[x_index][y_index]
-      colored_image = pygame.Surface(base_image.get_size())
-      colored_image.fill(fg_color)
-      final_image = base_image.copy()
-      final_image.blit(colored_image, (0, 0), special_flags = pygame.BLEND_MULT)
-      return final_image
-   
-   def get_tile_by_index(self, index, fg_color):
-      """
-      Returns colored tile, with a transparent background
-      index (int or char): index of tile on spritesheet
-      returns -> Surface
-      """
-      if isinstance(index, str):
-         index = ord(index)
-      return self.get_tile(index % self.spritesheet_size_tiles[0], index // self.spritesheet_size_tiles[0], fg_color)
 
 # testing
 if __name__ == "__main__":
