@@ -1,5 +1,10 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
 import pygame
 from tile_palette import TilePalette
+from Engine import utility
 
 class TilePanel:
    """
@@ -122,7 +127,7 @@ class TilePanel:
       self.set_rect_fg(x, y, w, h, fg_color)
       self.set_rect_bg(x, y, w, h, bg_color)
       # break up text for wrapping
-      char_array = self._create_2d_array(w, h, ' ')
+      char_array = utility.create_2d_array(w, h, ' ')
       text = text.replace('\n', ' \n ')
       base_word_array = text.split(' ')
       word_array = []
@@ -181,25 +186,17 @@ class TilePanel:
                image.blit(bg_stamp, (w * x, h * y))
             image.blit(self.tile_array[x][y], (w * x, h * y))
       return pygame.transform.scale(image, size)
-   
-   def _create_2d_array(self, width, height, default_val=0):
-      """
-      Helper method to create a 2d array of size [width][height]
-      returns -> Object[][]
-      """
-      return [[default_val for _ in range(height)] for _ in range(width)]
-   
-   
+
    def _create_tile_array(self):
       """
       Create the array of tiles. Overwrites old one whenever called
       returns -> None
       """
-      self.index_array = self._create_2d_array(self.tiles_wide, self.tiles_tall, ' ')
-      self.fg_array = self._create_2d_array(self.tiles_wide, self.tiles_tall, self.default_foreground_color)
-      self.bg_array = self._create_2d_array(self.tiles_wide, self.tiles_tall, self.background_color)
-      self.dirty_array = self._create_2d_array(self.tiles_wide, self.tiles_tall, True)
-      self.tile_array = self._create_2d_array(self.tiles_wide, self.tiles_tall, None)
+      self.index_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, ' ')
+      self.fg_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, self.default_foreground_color)
+      self.bg_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, self.background_color)
+      self.dirty_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, True)
+      self.tile_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, None)
          
    def _set_tile(self, x, y):
       """

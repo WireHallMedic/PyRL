@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
 import os
 import pygame
 
@@ -38,7 +42,7 @@ class TilePalette:
       """
       Create and fill tile array
       """
-      tile_array = [[0 for _ in range(self.spritesheet_size_tiles[1])] for _ in range(self.spritesheet_size_tiles[0])]
+      tile_array = utility.create_2d_array(self.spritesheet_size_tiles[0], self.spritesheet_size_tiles[1], 0)
       copy_rect = pygame.Rect(0, 0, self.tile_size_px[0], self.tile_size_px[1])
       colorkey = spritesheet.get_colorkey()
       for x in range(0, self.spritesheet_size_tiles[0]):
