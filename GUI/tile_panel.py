@@ -41,6 +41,8 @@ class TilePanel:
    def set_tile(self, x, y):
       """
       Create surface by stored values
+      x (int): x location
+      x (int): y location
       """
       self.tile_array[x][y] = self.palette.get_tile_by_index(self.index_array[x][y], self.fg_array[x][y])
       self.dirty_array[x][y] = False
@@ -56,6 +58,21 @@ class TilePanel:
    def set_tile_bg(self, x, y, color):
       self.bg_array[x][y] = color
       self.dirty_array[x][y] = True
+   
+   def set_rect_index(self, x, y, w, h, index):
+      for _x in range(x, x + w):
+         for _y in range(y, y + h):
+            self.set_tile_index(_x, _y, index)
+   
+   def set_rect_fg(self, x, y, w, h, color):
+      for _x in range(x, x + w):
+         for _y in range(y, y + h):
+            self.set_tile_fg(_x, _y, color)
+   
+   def set_rect_bg(self, x, y, w, h, color):
+      for _x in range(x, x + w):
+         for _y in range(y, y + h):
+            self.set_tile_bg(_x, _y, color)
    
    def get_image(self, size):
       """
@@ -73,7 +90,7 @@ class TilePanel:
          for y in range(self.tiles_tall):
             if self.dirty_array[x][y]:
                self.set_tile(x, y)
-            if self.bg_array[x][y] != self.background_color:
+            if self.bg_array[x][y] !=  None and self.bg_array[x][y] != self.background_color:
                bg_stamp.fill(self.bg_array[x][y])
                image.blit(bg_stamp, (w * x, h * y))
             image.blit(self.tile_array[x][y], (w * x, h * y))
@@ -94,6 +111,9 @@ if __name__ == "__main__":
          char_index += 1
          if char_index == 256:
             char_index = 0
+   testPanel.set_rect_index(0, 0, 5, 5, '!')
+   testPanel.set_rect_fg(0, 0, 5, 5, (0, 0, 255))
+   testPanel.set_rect_bg(0, 0, 5, 5, (0, 255, 0))
    
    background = pygame.Surface(screen.get_size())
    background = background.convert()
