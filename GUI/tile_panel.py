@@ -82,7 +82,7 @@ class TilePanel:
 # testing
 if __name__ == "__main__":
    pygame.init()
-   screen = pygame.display.set_mode((8 * 80, 16 * 24), pygame.SCALED)
+   screen = pygame.display.set_mode((8 * 80, 16 * 24), pygame.SCALED | pygame.RESIZABLE)
    pygame.display.set_caption("TilePanel Test")
    test_palette = TilePalette("WSFont_8x16.png", (16, 16), (8, 16))
    testPanel = TilePanel(test_palette, 80, 24)
@@ -113,6 +113,8 @@ if __name__ == "__main__":
             going = False
          elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             going = False
+         elif event.type == pygame.VIDEORESIZE:
+            screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE) # don't put SCALED here or the user can't shrink the window
 
       # Draw Everything
       screen.blit(background, (0, 0))
