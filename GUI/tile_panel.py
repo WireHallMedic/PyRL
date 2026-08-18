@@ -74,6 +74,54 @@ class TilePanel:
          for _y in range(y, y + h):
             self.set_tile_bg(_x, _y, color)
    
+   def write(self, x, y, w, h, text, fg_color=None, bg_color=None):
+      # set fg and bg
+      if fg_color is None:
+         fg_color = self.default_foreground_color
+      if bg_color is None:
+         bg_color = self.background_color
+      self.set_rect_fg(x, y, w, h, fg_color)
+      self.set_rect_bg(x, y, w, h, bg_color)
+      # break up text for wrapping
+      char_array = self.create_2d_array(w, h, ' ')
+      text = text.replace('\n', ' \n ')
+      base_word_array = text.split(' ')
+      word_array = []
+      for word in base_word_array:
+         # break long words
+         while len(word) > w:
+            word_array.append(word[0:w])
+            word = word[w:]
+         word_array.append(word)
+      row = 0
+      col = 0
+      # put text in char array
+      for word in word_array:
+         # wrap if word too long for remaining space
+         if len(word) >= w - col:
+            col = 0
+            row += 1
+         # process newline
+         if word == '\n':
+            col = 0
+            row += 1
+            continue
+         # end looping if no more rows
+         if row >= h:
+            break
+         # add chars to char_array
+         for x_index in range(len(word)):
+            char_array[col][row] = word[x_index]
+            col += 1
+         # add space after word if there is room
+         if col < w - 1:
+            col += 1
+      for _x in range(w):
+         for _y in range(h):
+            self.set_tile_index(x + _x, y + _y, char_array[_x][_y])
+            
+         
+   
    def get_image(self, size):
       """
       Returns the image, scaled to the specified size
@@ -121,6 +169,9 @@ if __name__ == "__main__":
    screen.blit(background, (0, 0))
    pygame.display.flip()
    clock = pygame.time.Clock()
+   
+   out_str = "The quick brown fox jumped over the lazy dog's back. abcdefghijklmnopqrstuvwxyz"
+   testPanel.write(10, 10, 10, 11, out_str, bg_color=(64, 64, 64))
 
    # Main Loop
    going = True
