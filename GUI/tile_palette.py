@@ -68,11 +68,7 @@ class TilePalette:
       fg_color (tuple of ints): foreground color for new tile
       returns -> Surface
       """
-      colorkey = self.spritesheet.get_colorkey()
-      new_image = pygame.Surface(base_image.get_size())
-      new_image.set_colorkey(colorkey, pygame.RLEACCEL)
-      new_image.fill(colorkey)
-      new_image.blit(original_tile, (0, 0))
+      new_image = original_tile.copy()
       new_image.blit(self.get_tile(x_index, y_index, fg_color), (0, 0))
       return new_image
    
@@ -86,7 +82,7 @@ class TilePalette:
       """
       if isinstance(index, str):
          index = ord(index)
-      return self.stack_tile_by_index(original_tile, index % self.spritesheet_size_tiles[0], index // self.spritesheet_size_tiles[0], fg_color)
+      return self.stack_tile(original_tile, index % self.spritesheet_size_tiles[0], index // self.spritesheet_size_tiles[0], fg_color)
    
    def _load_image_from_file(self, file_name, colorkey=None):
       """
@@ -118,7 +114,7 @@ class TilePalette:
       copy_rect = pygame.Rect(0, 0, self.tile_size_px[0], self.tile_size_px[1])
       colorkey = spritesheet.get_colorkey()
       for x in range(0, self.spritesheet_size_tiles[0]):
-         for y in range(0, self.spritesheet_size_tiles[0]):
+         for y in range(0, self.spritesheet_size_tiles[1]):
             tile_array[x][y] = pygame.Surface((self.tile_size_px[0], self.tile_size_px[1]))
             copy_rect.left = x * self.tile_size_px[0]
             copy_rect.top = y * self.tile_size_px[1]
@@ -187,5 +183,9 @@ if __name__ == "__main__":
          screen_pos = (x * 8, 16 * 17)
          screen.blit(bg_blit, screen_pos)
          screen.blit(fg_blit, screen_pos)
+      screen_pos = (2, screen_pos[1] + 16)
+      stacked_tile = test_palette2.get_tile(2, 0, (0, 0, 255))
+      stacked_tile = test_palette2.stack_tile_by_index(stacked_tile, '@', (0, 255, 0))
+      screen.blit(stacked_tile, screen_pos)
       pygame.display.flip()
    pygame.quit()
