@@ -5,6 +5,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 import pygame
 from tile_palette import TilePalette
 from Engine import utility
+import gui_tools
 
 class TilePanel:
    """
@@ -187,6 +188,15 @@ class TilePanel:
             image.blit(self.tile_array[x][y], (w * x, h * y))
       return pygame.transform.scale(image, size)
 
+   def is_in_bounds(self, x, y):
+      """
+      Returns True if the passed coordinates are within the array, else False
+      x (int): x position to check
+      y (int): y position to check
+      returns -> boolean
+      """
+      return x >= 0 and y >= 0 and x < self.tiles_wide and y < self.tiles_tall
+   
    def _create_tile_array(self):
       """
       Create the array of tiles. Overwrites old one whenever called
@@ -214,18 +224,18 @@ if __name__ == "__main__":
    screen = pygame.display.set_mode((8 * 80, 16 * 24), pygame.SCALED | pygame.RESIZABLE)
    pygame.display.set_caption("TilePanel Test")
    test_palette = TilePalette("WSFont_8x16.png", (16, 16), (8, 16))
-   testPanel = TilePanel(test_palette, 80, 24)
+   test_panel = TilePanel(test_palette, 80, 24)
    
    char_index = 0
-   for x in range(0, 80):
-      for y in range(0, 24):
-         testPanel.set_tile_index(x, y, char_index)
+   for x in range(test_panel.tiles_wide):
+      for y in range(test_panel.tiles_tall):
+         test_panel.set_tile_index(x, y, char_index)
          char_index += 1
          if char_index == 256:
             char_index = 0
-   testPanel.set_rect_index(0, 0, 5, 5, '!')
-   testPanel.set_rect_fg(0, 0, 5, 5, (0, 0, 255))
-   testPanel.set_rect_bg(0, 0, 5, 5, (0, 255, 0))
+   test_panel.set_rect_index(0, 0, 5, 5, '!')
+   test_panel.set_rect_fg(0, 0, 5, 5, (0, 0, 255))
+   test_panel.set_rect_bg(0, 0, 5, 5, (0, 255, 0))
    
    background = pygame.Surface(screen.get_size())
    background = background.convert()
@@ -235,8 +245,24 @@ if __name__ == "__main__":
    clock = pygame.time.Clock()
    
    out_str = "The quick brown\nfox jumped over the lazy dog's back. abcdefghijklmnopqrstuvwxyz"
-   testPanel.write(10, 10, 10, 12, out_str, bg_color=(64, 64, 64))
-
+   test_panel.write(10, 10, 10, 12, out_str, bg_color=(64, 64, 64))
+   
+   test_panel.set_rect_index(25, 5, 8, 8, ' ')
+   border_arr = utility.create_2d_array(test_panel.tiles_wide, test_panel.tiles_tall, False)
+   for i in range(8):
+      border_arr[25 + i][5] = True
+      border_arr[25 + i][5 + 7] = True
+      border_arr[25][5 + i] = True
+      border_arr[25 + 7][5 + i] = True
+      border_arr[25 + 2][5 + i] = True
+      border_arr[25 + i][5 + 2] = True
+      border_arr[25 + 3][5 + 1] = True
+   border_arr = gui_tools.get_border_index_array(border_arr)
+   for x in range(test_panel.tiles_wide):
+      for y in range(test_panel.tiles_tall):
+         if border_arr[x][y] is not 0:
+            test_panel.set_tile_index(x, y, border_arr[x][y])
+   
    # Main Loop
    going = True
    while going:
@@ -250,9 +276,9 @@ if __name__ == "__main__":
             going = False
          elif event.type == pygame.VIDEORESIZE:
             screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE) # don't put SCALED here or the user can't shrink the window
-
+      
       # Draw Everything
       screen.blit(background, (0, 0))
-      screen.blit(testPanel.get_image(screen.get_size()), (0, 0))
+      screen.blit(test_panel.get_image(screen.get_size()), (0, 0))
       pygame.display.flip()
    pygame.quit()
