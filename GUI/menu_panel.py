@@ -32,16 +32,31 @@ class MenuPanel(tile_panel.TilePanel):
       self.selected_icon = 16 # right-pointing arrow
    
    def increment_selected(self):
+      """
+      Increase the selected index by 1, wrapping if at end
+      returns -> None
+      """
       self.selected_index += 1
       if self.selected_index == len(self.string_list):
          self.selected_index = 0
    
    def decrement_selected(self):
+      """
+      Reduce the selected index by 1, wrapping if at 0
+      returns -> None
+      """
       self.selected_index -= 1
       if self.selected_index == -1:
          self.selected_index = len(self.string_list) - 1
    
    def set_items(self, item_list):
+      """
+      Set the menu items, and the elements they're tied to. Strings will be displayed as-is,
+      objects with a get_menu_name() will use the return value of that, and all other items
+      will be cast to strings.
+      item_list[object]: things to make a list of
+      returns -> None
+      """
       self.selected_index = 0
       self.string_list = []
       self.item_list = []
@@ -59,7 +74,6 @@ class MenuPanel(tile_panel.TilePanel):
          if len(new_str) > self.max_str_len:
             self.max_str_len = len(new_str)
       self.max_str_len += 3
-      print(self.string_list)
    
    def get_image(self, size):
       """
