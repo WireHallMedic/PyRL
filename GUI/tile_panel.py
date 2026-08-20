@@ -9,6 +9,7 @@ import gui_tools
 import screen_obj
 from gui_constants import *
 
+
 class TilePanel:
    """
    A class for holding information to be written to a pygame.Surface
