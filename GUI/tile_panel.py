@@ -260,7 +260,7 @@ if __name__ == "__main__":
    border_arr = gui_tools.get_border_index_array(border_arr)
    for x in range(test_panel.tiles_wide):
       for y in range(test_panel.tiles_tall):
-         if border_arr[x][y] is not 0:
+         if border_arr[x][y] != 0:
             test_panel.set_tile_index(x, y, border_arr[x][y])
    
    # Main Loop
