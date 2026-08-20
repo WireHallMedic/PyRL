@@ -29,6 +29,7 @@ class MenuPanel(tile_panel.TilePanel):
       self.menu_origin = (5, 2)
       self.selected_color = (0, 0, 127)
       self.max_str_len = 10
+      self.selected_icon = 16 # right-pointing arrow
    
    def increment_selected(self):
       self.selected_index += 1
@@ -47,10 +48,14 @@ class MenuPanel(tile_panel.TilePanel):
       returns -> Surface
       """
       y = self.menu_origin[1]
+      self.set_rect_bg(self.menu_origin[0], self.menu_origin[1], self.max_str_len, len(self.string_list), self.background_color)
       if len(self.string_list) > 0:
          for str in self.string_list:
             self.write(self.menu_origin[0], y, self.max_str_len, 1, "  " + str)
             y += 1
+      self.set_rect_bg(self.menu_origin[0], self.menu_origin[1] + self.selected_index, self.max_str_len, 1, self.selected_color)
+      self.set_tile_index(self.menu_origin[0], self.menu_origin[1] + self.selected_index, self.selected_icon)
+      
       return super().get_image(size)
       
 # testing
@@ -87,10 +92,16 @@ if __name__ == "__main__":
       for event in pygame.event.get():
          if event.type == pygame.QUIT:
             going = False
-         elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            going = False
          elif event.type == pygame.VIDEORESIZE:
             screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE) # don't put SCALED here or the user can't shrink the window
+         # key input
+         elif event.type == pygame.KEYDOWN :
+            if event.key == pygame.K_ESCAPE:
+               going = False
+            elif event.key == pygame.K_DOWN or event.key == pygame.K_KP2:
+               test_panel.increment_selected()
+            elif event.key == pygame.K_UP or event.key == pygame.K_KP8:
+               test_panel.decrement_selected()
       
       # Draw Everything
       screen.blit(background, (0, 0))
