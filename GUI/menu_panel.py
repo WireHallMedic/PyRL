@@ -41,6 +41,26 @@ class MenuPanel(tile_panel.TilePanel):
       if self.selected_index == -1:
          self.selected_index = len(self.string_list) - 1
    
+   def set_items(self, item_list):
+      self.selected_index = 0
+      self.string_list = []
+      self.item_list = []
+      self.max_str_len = 0
+      for item in item_list:
+         self.item_list.append(item)
+         new_str = ""
+         if isinstance(item, str):
+            new_str = item
+         elif hasattr(item, "get_menu_name"):
+            new_str = item.get_menu_name()
+         else:
+            new_str = str(item)
+         self.string_list.append(new_str)
+         if len(new_str) > self.max_str_len:
+            self.max_str_len = len(new_str)
+      self.max_str_len += 3
+      print(self.string_list)
+   
    def get_image(self, size):
       """
       Returns the full panel image, scaled to the specified size
@@ -73,9 +93,9 @@ if __name__ == "__main__":
    pygame.display.flip()
    clock = pygame.time.Clock()
    
-   test_panel.string_list = ["First", "Second", "Third", "Fourth", "Fifth"]
+   item_list = ["First", "Second", "Third", "Fourth", "Fifth"]
+   test_panel.set_items(item_list)
    
-   test_panel.set_rect_index(25, 5, 8, 8, ' ')
    border_arr = utility.create_2d_array(test_panel.tiles_wide, test_panel.tiles_tall, False)
    border_arr = gui_tools.get_border_index_array(border_arr)
    for x in range(test_panel.tiles_wide):
