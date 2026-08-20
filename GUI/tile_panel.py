@@ -143,7 +143,7 @@ class TilePanel:
       # put text in char array
       for word in word_array:
          # wrap if word too long for remaining space
-         if len(word) >= w - col:
+         if len(word) > w - col:
             col = 0
             row += 1
          # process newline
