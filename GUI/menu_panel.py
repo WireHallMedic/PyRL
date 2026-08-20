@@ -7,7 +7,7 @@ from tile_palette import TilePalette
 from Engine import utility
 import tile_panel
 import gui_tools
-import gui_constants
+from gui_constants import *
 
 class MenuPanel(tile_panel.TilePanel):
    """
@@ -30,7 +30,7 @@ class MenuPanel(tile_panel.TilePanel):
       self.menu_origin = (5, 2)
       self.selected_color = (0, 0, 127)
       self.max_str_len = 10
-      self.selected_icon = gui_constants.RIGHT_TRIANGE_TILE
+      self.selected_icon = TileConstants.RIGHT_TRIANGE_TILE
    
    def increment_selected(self):
       """

@@ -1,11 +1,11 @@
-import gui_constants
+from gui_constants import *
 
 class ScreenObj:
    """
    A simple class for holding the basic values for generating an image, and the image itself.
    """
    
-   def __init__(self, index = ' ', fg = gui_constants.WHITE, bg = None):
+   def __init__(self, index = ' ', fg = ColorConstants.WHITE, bg = None):
       """
       Initializer
       index (int or char): spritesheet index of icon
