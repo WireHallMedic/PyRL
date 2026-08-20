@@ -5,10 +5,13 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 import os
 import pygame
 from Engine import utility
+from gui_constants import *
 
 class TilePalette:
    """
    A class for containing a single set of mask-style tile sprites.
+   The spritesheet that's passed in should be some color on a black background. Internally,
+   this is stored as off-white on off-black, as these colors shouldn't collide with anything.
    """
    
    def __init__(self, spritesheet_file_name, spritesheet_size_tiles, tile_size_px):
@@ -20,7 +23,7 @@ class TilePalette:
       """
       self.tile_size_px = tile_size_px
       self.spritesheet_size_tiles = spritesheet_size_tiles
-      self.spritesheet = self._load_image_from_file(spritesheet_file_name, colorkey=-1)
+      self.spritesheet = self._load_image_from_file(spritesheet_file_name)
       self.tile_array = self._get_tile_array(self.spritesheet)
    
    def get_tile_background(self, bg_color):
@@ -29,7 +32,7 @@ class TilePalette:
       bg_color (tuple of ints): color
       returns -> Surface
       """
-      tile_bg = pygame.Surface((self.tile_size_px[0], self.tile_size_px[1]))
+      tile_bg = pygame.Surface((self.tile_size_px[0], self.tile_size_px[1])).convert()
       tile_bg.fill(bg_color)
       return tile_bg
    
@@ -41,12 +44,12 @@ class TilePalette:
       fg_color (tuple of ints): foreground color for new tile
       returns -> Surface
       """
-      base_image = self.tile_array[x_index][y_index]
-      colored_image = pygame.Surface(base_image.get_size())
+      stamp = self.tile_array[x_index][y_index]
+      colored_image = pygame.Surface(stamp.get_size()).convert()
       colored_image.fill(fg_color)
-      final_image = base_image.copy()
-      final_image.blit(colored_image, (0, 0), special_flags = pygame.BLEND_MULT)
-      return final_image
+      colored_image.blit(stamp, (0, 0))
+      colored_image.set_colorkey(ColorConstants.OFF_BLACK)
+      return colored_image
    
    def get_tile_by_index(self, index, fg_color):
       """
@@ -68,7 +71,7 @@ class TilePalette:
       fg_color (tuple of ints): foreground color for new tile
       returns -> Surface
       """
-      new_image = original_tile.copy()
+      new_image = original_tile.copy().convert()
       new_image.blit(self.get_tile(x_index, y_index, fg_color), (0, 0))
       return new_image
    
@@ -94,15 +97,16 @@ class TilePalette:
       main_dir = os.path.split(os.path.abspath(__file__))[0]
       image_dir = os.path.join(main_dir, "../res/images")
       fullname = os.path.join(image_dir, file_name)
-      image = pygame.image.load(fullname)
-      image = image.convert()
-   
-      if colorkey is not None:
-         if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-         image.set_colorkey(colorkey, pygame.RLEACCEL)
+      image = pygame.image.load(fullname).convert()
       
-      return image
+      # change black to off-black, and non-black to off-white
+      off_black_image = pygame.Surface(image.get_size()).convert()
+      off_black_image.fill(ColorConstants.OFF_BLACK)
+      for x in range(image.get_size()[0]):
+         for y in range(image.get_size()[1]):
+            if image.get_at((x, y)) != ColorConstants.BLACK:
+               off_black_image.set_at((x, y), ColorConstants.OFF_WHITE)
+      return off_black_image
    
    def _get_tile_array(self, spritesheet):
       """
@@ -112,14 +116,13 @@ class TilePalette:
       """
       tile_array = utility.create_2d_array(self.spritesheet_size_tiles[0], self.spritesheet_size_tiles[1], 0)
       copy_rect = pygame.Rect(0, 0, self.tile_size_px[0], self.tile_size_px[1])
-      colorkey = spritesheet.get_colorkey()
       for x in range(0, self.spritesheet_size_tiles[0]):
          for y in range(0, self.spritesheet_size_tiles[1]):
-            tile_array[x][y] = pygame.Surface((self.tile_size_px[0], self.tile_size_px[1]))
             copy_rect.left = x * self.tile_size_px[0]
             copy_rect.top = y * self.tile_size_px[1]
-            tile_array[x][y].blit(spritesheet, (0, 0), copy_rect)
-            tile_array[x][y].set_colorkey(colorkey, pygame.RLEACCEL)
+            tile_array[x][y] = spritesheet.subsurface(copy_rect).convert()
+            # since this is a mask, the colorkey is off-white rather than off-black
+            tile_array[x][y].set_colorkey(ColorConstants.OFF_WHITE)
       return tile_array
 
 # testing
@@ -158,17 +161,17 @@ if __name__ == "__main__":
       for x in range(0, 16):
          for y in range(0, 16):
             # basic, direct tiles
-            screen.blit(test_palette.tile_array[x][y], (x * 8, y * 16))
+            screen.blit(test_palette.get_tile(x, y, ColorConstants.WHITE), (x * 8, y * 16))
 
-            # blue fg on white bg
-            bg_blit = test_palette.get_tile_background((255, 255, 255))
-            fg_blit = test_palette.get_tile(x, y, (0, 0, 255))
+            # black fg on white bg
+            bg_blit = test_palette.get_tile_background(ColorConstants.WHITE)
+            fg_blit = test_palette.get_tile(x, y, ColorConstants.BLACK)
             screen_pos = (second_group_inset + (x * 8), y * 16)
             screen.blit(bg_blit, screen_pos)
             screen.blit(fg_blit, screen_pos)
             
             # basic, direct tiles
-            screen.blit(test_palette2.tile_array[x][y], (third_group_inset + (x * 16), y * 16))
+            screen.blit(test_palette2.get_tile(x, y, ColorConstants.WHITE), (third_group_inset + (x * 16), y * 16))
 
             # red fg on yellow bg
             bg_blit = test_palette2.get_tile_background((255, 255, 0))

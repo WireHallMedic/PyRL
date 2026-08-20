@@ -7,6 +7,7 @@ from tile_palette import TilePalette
 from Engine import utility
 import gui_tools
 import screen_obj
+from gui_constants import *
 
 class TilePanel:
    """
@@ -30,7 +31,7 @@ class TilePanel:
       self.width = 500
       self.height = 500
       self.background_color = (0, 0, 0)
-      self.default_foreground_color = (255, 255, 255)
+      self.default_foreground_color = ColorConstants.WHITE
       self._create_tile_array()
    
    def set_tile_index(self, x, y, index):

@@ -1,7 +1,8 @@
 class ColorConstants:
    WHITE = (255, 255, 255)
    BLACK = (0, 0, 0)
-   OFF_BLACK = (1, 1, 1)
+   OFF_BLACK = (1, 1, 1)         # used for colorkeying, do not use in sprites
+   OFF_WHITE = (254, 254, 254)   # used for colorkeying, do not use in sprites
 
 
 class TileConstants:
