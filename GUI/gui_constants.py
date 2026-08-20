@@ -1,3 +1,8 @@
+# colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+OFF_BLACK = (1, 1, 1)
+
 
 # Tile constants
 # row 0
