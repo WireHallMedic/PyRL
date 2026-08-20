@@ -6,6 +6,7 @@ import pygame
 from tile_palette import TilePalette
 from Engine import utility
 import gui_tools
+import screen_obj
 
 class TilePanel:
    """
@@ -40,7 +41,7 @@ class TilePanel:
       index (int or char): tile value
       returns -> None
       """
-      self.index_array[x][y] = index
+      self.tile_array[x][y].index = index
       self.dirty_array[x][y] = True
    
    def set_tile_fg(self, x, y, color):
@@ -51,7 +52,7 @@ class TilePanel:
       color (int tuple): color value
       returns -> None
       """
-      self.fg_array[x][y] = color
+      self.tile_array[x][y].fg_color = color
       self.dirty_array[x][y] = True
    
    def set_tile_bg(self, x, y, color):
@@ -62,7 +63,7 @@ class TilePanel:
       color (int tuple): color value
       returns -> None
       """
-      self.bg_array[x][y] = color
+      self.tile_array[x][y].bg_color = color
       self.dirty_array[x][y] = True
    
    def set_rect_index(self, x, y, w, h, index):
@@ -182,10 +183,10 @@ class TilePanel:
          for y in range(self.tiles_tall):
             if self.dirty_array[x][y]:
                self._set_tile(x, y)
-            if self.bg_array[x][y] !=  None and self.bg_array[x][y] != self.background_color:
-               bg_stamp.fill(self.bg_array[x][y])
+            if self.tile_array[x][y].bg_color !=  None and self.tile_array[x][y].bg_color != self.background_color:
+               bg_stamp.fill(self.tile_array[x][y].bg_color)
                image.blit(bg_stamp, (w * x, h * y))
-            image.blit(self.tile_array[x][y], (w * x, h * y))
+            image.blit(self.tile_array[x][y].image, (w * x, h * y))
       return pygame.transform.scale(image, size)
 
    def is_in_bounds(self, x, y):
@@ -199,14 +200,11 @@ class TilePanel:
    
    def _create_tile_array(self):
       """
-      Create the array of tiles. Overwrites old one whenever called
+      Create the array of tiles, as well as the dirty array. Overwrites old ones whenever called
       returns -> None
       """
-      self.index_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, ' ')
-      self.fg_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, self.default_foreground_color)
-      self.bg_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, self.background_color)
       self.dirty_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, True)
-      self.tile_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, None)
+      self.tile_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, screen_obj.ScreenObj)
          
    def _set_tile(self, x, y):
       """
@@ -215,7 +213,7 @@ class TilePanel:
       y (int): y location
       returns -> None
       """
-      self.tile_array[x][y] = self.palette.get_tile_by_index(self.index_array[x][y], self.fg_array[x][y])
+      self.tile_array[x][y].create_image(self.palette)
       self.dirty_array[x][y] = False
    
 # testing
