@@ -43,8 +43,7 @@ class TilePanel:
       index (int or char): tile value
       returns -> None
       """
-      self.tile_array[x][y].index = index
-      self.dirty_array[x][y] = True
+      self.tile_array[x][y].set_index(index)
    
    def set_tile_fg(self, x, y, color):
       """
@@ -54,8 +53,7 @@ class TilePanel:
       color (int tuple): color value
       returns -> None
       """
-      self.tile_array[x][y].fg_color = color
-      self.dirty_array[x][y] = True
+      self.tile_array[x][y].set_fg_color(color)
    
    def set_tile_bg(self, x, y, color):
       """
@@ -65,8 +63,7 @@ class TilePanel:
       color (int tuple): color value
       returns -> None
       """
-      self.tile_array[x][y].bg_color = color
-      self.dirty_array[x][y] = True
+      self.tile_array[x][y].set_bg_color(color)
    
    def set_rect_index(self, x, y, w, h, index):
       """
@@ -183,12 +180,10 @@ class TilePanel:
       bg_stamp = pygame.Surface((w, h))
       for x in range(self.tiles_wide):
          for y in range(self.tiles_tall):
-            if self.dirty_array[x][y]:
-               self._set_tile(x, y)
-            if self.tile_array[x][y].bg_color !=  None and self.tile_array[x][y].bg_color != self.background_color:
-               bg_stamp.fill(self.tile_array[x][y].bg_color)
+            if self.tile_array[x][y].get_bg_color() !=  None and self.tile_array[x][y].get_bg_color() != self.background_color:
+               bg_stamp.fill(self.tile_array[x][y].get_bg_color())
                image.blit(bg_stamp, (w * x, h * y))
-            image.blit(self.tile_array[x][y].image, (w * x, h * y))
+            image.blit(self.tile_array[x][y].get_image(), (w * x, h * y))
       return pygame.transform.scale(image, size)
 
    def is_in_bounds(self, x, y):
@@ -202,21 +197,10 @@ class TilePanel:
    
    def _create_tile_array(self):
       """
-      Create the array of tiles, as well as the dirty array. Overwrites old ones whenever called
+      Create the array of tiles. Overwrites old one whenever called
       returns -> None
       """
-      self.dirty_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, True)
-      self.tile_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, screen_obj.ScreenObj)
-         
-   def _set_tile(self, x, y):
-      """
-      Create surface by stored values
-      x (int): x location
-      y (int): y location
-      returns -> None
-      """
-      self.tile_array[x][y].create_image(self.palette)
-      self.dirty_array[x][y] = False
+      self.tile_array = utility.create_2d_array(self.tiles_wide, self.tiles_tall, lambda : screen_obj.ScreenObj(self.palette))
    
 # testing
 if __name__ == "__main__":
