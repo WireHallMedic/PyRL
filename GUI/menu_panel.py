@@ -97,7 +97,7 @@ if __name__ == "__main__":
       def get_menu_name(self):
          return "Second"
    
-   item_list = ["First", SecondItem(), "Third", "Fourth", "Fifth"]
+   item_list = ["First", SecondItem(), "Third", 4, "Fifth"]
    test_panel.set_items(item_list)
    
    border_arr = utility.create_2d_array(test_panel.tiles_wide, test_panel.tiles_tall, False)
