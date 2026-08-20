@@ -127,6 +127,7 @@ class TilePalette:
 
 # testing
 if __name__ == "__main__":
+   from unbound_screen_obj import *
    pygame.init()
    screen = pygame.display.set_mode((800, 400), pygame.SCALED)
    pygame.display.set_caption("Palette Test")
@@ -190,5 +191,11 @@ if __name__ == "__main__":
       stacked_tile = test_palette2.get_tile(2, 0, (0, 0, 255))
       stacked_tile = test_palette2.stack_tile_by_index(stacked_tile, '@', (0, 255, 0))
       screen.blit(stacked_tile, screen_pos)
+      
+      otherAt = UnboundScreenObj(test_palette, '@')
+      otherAt.loc_tiles = [2, 18]
+      otherAt.offset = [0.5, 0.5]
+      otherAt.blit_to_surface(screen)
+      
       pygame.display.flip()
    pygame.quit()
