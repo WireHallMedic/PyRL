@@ -93,7 +93,11 @@ if __name__ == "__main__":
    pygame.display.flip()
    clock = pygame.time.Clock()
    
-   item_list = ["First", "Second", "Third", "Fourth", "Fifth"]
+   class SecondItem:
+      def get_menu_name(self):
+         return "Second"
+   
+   item_list = ["First", SecondItem(), "Third", "Fourth", "Fifth"]
    test_panel.set_items(item_list)
    
    border_arr = utility.create_2d_array(test_panel.tiles_wide, test_panel.tiles_tall, False)
