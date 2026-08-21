@@ -1,3 +1,7 @@
+BOARD_WIDTH = 21
+FULL_PANEL_WIDTH = 160
+FULL_PANEL_HEIGHT = 60
+
 class ColorConstants:
    WHITE = (255, 255, 255)
    BLACK = (0, 0, 0)

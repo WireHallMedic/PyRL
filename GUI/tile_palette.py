@@ -193,8 +193,8 @@ if __name__ == "__main__":
       screen.blit(stacked_tile, screen_pos)
       
       otherAt = UnboundScreenObj(test_palette, '@')
-      otherAt.loc_tiles = [2, 18]
-      otherAt.offset = [0.5, 0.5]
+      otherAt.set_loc_tiles(2, 18)
+      otherAt.set_offset(0.5, 0.5)
       otherAt.blit_to_surface(screen)
       
       pygame.display.flip()
