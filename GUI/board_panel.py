@@ -15,8 +15,6 @@ class BoardPanel(TilePanel):
    Class for displaying the current play area
    """
    
-   BOARD_WIDTH = 21
-   
    def __init__(self, tile_palette, tiles_wide=BOARD_WIDTH, tiles_tall=BOARD_WIDTH):
       """
       Initializer
