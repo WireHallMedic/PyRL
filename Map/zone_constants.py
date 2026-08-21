@@ -15,10 +15,10 @@ TileBases = [
    dict(name="Deep Liquid", high_passable=True, low_passable=True, transparent=True, tile_index='~'),
    dict(name="Closed Door", high_passable=True, low_passable=True, transparent=True, tile_index='|'),
    dict(name="Open Door", high_passable=True, low_passable=True, transparent=True, tile_index='/'),
-   dict(name="Terminal", high_passable=True, low_passable=True, transparent=True, tile_index=' '),
+   dict(name="Terminal", high_passable=True, low_passable=True, transparent=True, tile_index=TileConstants.CAPITAL_OMEGA_TILE),
    dict(name="Unflipped Switch", high_passable=True, low_passable=True, transparent=True, tile_index='!'),
-   dict(name="Flipped Switch", high_passable=True, low_passable=True, transparent=True, tile_index='`'),
-   dict(name="Breakable Container", high_passable=True, low_passable=True, transparent=True, tile_index='`'),
-   dict(name="Closed Chest", high_passable=True, low_passable=True, transparent=True, tile_index='`'),
-   dict(name="Opened Chest", high_passable=True, low_passable=True, transparent=True, tile_index='`')
+   dict(name="Flipped Switch", high_passable=True, low_passable=True, transparent=True, tile_index=TileConstants.INVERTED_EXCLAMATION_TILE),
+   dict(name="Breakable Container", high_passable=True, low_passable=True, transparent=True, tile_index='0'),
+   dict(name="Closed Chest", high_passable=True, low_passable=True, transparent=True, tile_index='?'),
+   dict(name="Opened Chest", high_passable=True, low_passable=True, transparent=True, tile_index=TileConstants.INVERTED_QUESTION_TILE)
 ]
