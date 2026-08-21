@@ -3,11 +3,11 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 import pygame
-from tile_palette import TilePalette
+from GUI.tile_palette import TilePalette as TilePalette
 from Engine import utility
-import tile_panel
-import gui_tools
-from gui_constants import *
+import GUI.tile_panel as tile_panel
+import GUI.gui_tools as gui_tools
+from GUI.gui_constants import *
 
 class MenuPanel(tile_panel.TilePanel):
    """

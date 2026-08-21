@@ -5,9 +5,9 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 import pygame
 from tile_palette import TilePalette
 from Engine import utility
-import gui_tools
-import screen_obj
-from gui_constants import *
+import GUI.gui_tools as gui_tools
+import GUI.screen_obj as screen_obj
+from GUI.gui_constants import *
 
 
 class TilePanel:

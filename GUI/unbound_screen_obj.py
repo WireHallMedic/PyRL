@@ -1,5 +1,9 @@
-from gui_constants import *
-import screen_obj
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+from GUI.gui_constants import *
+import GUI.screen_obj as screen_obj
 
 class UnboundScreenObj(screen_obj.ScreenObj):
    """

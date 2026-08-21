@@ -5,7 +5,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 import os
 import pygame
 from Engine import utility
-from gui_constants import *
+from GUI.gui_constants import *
 
 class TilePalette:
    """

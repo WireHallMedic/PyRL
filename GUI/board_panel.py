@@ -3,12 +3,12 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 import pygame
-from tile_palette import TilePalette
-from tile_panel import TilePanel
+from GUI.tile_palette import TilePalette
+from GUI.tile_panel import TilePanel
 from Engine import utility
-import gui_tools
-import screen_obj
-from gui_constants import *
+import GUI.gui_tools
+import GUI.screen_obj
+from GUI.gui_constants import *
 
 class BoardPanel(TilePanel):
    """
