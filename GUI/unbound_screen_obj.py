@@ -29,15 +29,35 @@ class UnboundScreenObj(screen_obj.ScreenObj):
       surface.blit(self.get_image(), (x_loc, y_loc))
    
    def set_loc_tiles(self, x, y):
+      """
+      Set map location   
+      x (int): x position
+      y (int): y position
+      returns -> None
+      """
       self._loc_tiles[0] = x
       self._loc_tiles[1] = y
    
    def get_loc_tiles(self):
+      """
+      Return map location in tiles  
+      returns -> int()
+      """
       return (self._loc_tiles[0], self._loc_tiles[1])
    
    def set_offset(self, x, y):
+      """
+      Set tile offset   
+      x (int): x offset
+      y (int): y offset
+      returns -> None
+      """
       self._offset[0] = x
       self._offset[1] = y
    
    def get_loc_tiles(self):
+      """
+      Return tile offset  
+      returns -> float()
+      """
       return (self._offset[0], self._offset[1])
